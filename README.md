@@ -1,4 +1,17 @@
-# AutoTimm
+<h1 align="center">
+    <p>AutoTimm</p>
+</h1>
+
+<h4 align="center">
+    <p>
+        <b>English</b> |
+        <a href="https://github.com/jianzhnie/AutoTimm/blob/main/README_zh.md">简体中文</a> 
+    <p>
+</h4>
+
+<h4 align="center">
+    <p>State-of-the-art Automatic PyTorch image models</p>
+</h4>
 
 AutoTimm automates machine learning tasks enabling you to easily achieve strong predictive performance in your applications.  With just a few lines of code, you can train and deploy high-accuracy machine learning and deep learning models on image.
 
