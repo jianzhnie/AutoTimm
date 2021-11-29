@@ -39,7 +39,8 @@ def parse_args():
         metavar='MODEL',
         default='resnet18',
         choices=model_names,
-        help='model architecture: ' + ' | '.join(model_names))
+        help='model architecture: ' + ' | '.join(model_names) +
+        ' (default: resnet18)')
     parser.add_argument(
         '-j',
         '--workers',

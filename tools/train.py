@@ -44,7 +44,8 @@ def parse_args():
         metavar='MODEL',
         default='resnet18',
         choices=model_names,
-        help='model architecture: ' + ' | '.join(model_names))
+        help='model architecture: ' + ' | '.join(model_names) +
+        ' (default: resnet18)')
     parser.add_argument(
         '--pretrained',
         dest='pretrained',
@@ -263,7 +264,9 @@ def parse_args():
     parser.add_argument(
         '--dynamic-loss-scale',
         action='store_true',
-        help='Use dynamic loss scaling.')
+        help='Use dynamic loss scaling.  If supplied, this argument supersedes '
+        + '--static-loss-scale.',
+    )
     parser.add_argument(
         '--memory-format',
         type=str,
