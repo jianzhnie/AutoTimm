@@ -121,11 +121,15 @@ Now that we have a `Dataset` object, we can use AutoTimm's default configuration
 #### AutoTimm Benchmark
 
 ```shell script
-python benchmark.py \
-    --data_path /media/robin/DATA/datatsets/image_data/dog-breed-identification \
-    --output_path /home/robin/jianzh/automl/autodl/benchmark \
-    --dataset dog-breed-identification \
-    --train_framework autogluon
+python -m torch.distributed.launch --nproc_per_node=1 train.py \
+--data_name hymenoptera \
+--data_path /media/robin/DATA/datatsets/image_data/hymenoptera/split/ \
+--output-dir /media/robin/DATA/datatsets/image_data/hymenoptera \
+--model resnet18 \
+--epochs 10 \
+--lr 0.01 \
+--batch-size 16 \
+--pretrained > output.txt 2>&1 &
 ```
 
 ## Step 4:  fit to generate a classification model
