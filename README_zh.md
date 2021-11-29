@@ -1,4 +1,6 @@
-# 1  数据集加载
+# AutoTimm 使用教程
+
+## 1  数据集加载
 
 我们将使用图像分类任务来说明如何使用 AutoDL API。 
 
@@ -6,9 +8,9 @@
 
 第一步导入需要的包和函数
 
-```
-import autotimm as ag
-from autogluon.vision import ImagePredictor, ImageDataset
+```python
+import autotimm
+from from autotimm.auto import ImagePredictor, TorchImageClassificationDataset
 ```
 
  
@@ -17,23 +19,17 @@ from autogluon.vision import ImagePredictor, ImageDataset
 
 我们使用 Kaggle 的 Shopee-IET 数据集的一个子集。 该数据中的每幅图像都描述了一件服装，相应的标签指定了它的服装类别。 我们的数据子集包含以下可能的标签：BabyPants、BabyShirt、womencasualshoes、womenchiffontop。我们可以通过自动下载 url 数据来加载数据集：
 
- 
-
 （1）直接从文件夹读取
 
 ```python
-train_dataset, _, test_dataset = ImageDataset.from_folders('https://autotimm.s3.amazonaws.com/datasets/shopee-iet.zip')
+train_dataset, _, test_dataset = TorchImageClassificationDataset.from_folders('https://autotimm.s3.amazonaws.com/datasets/shopee-iet.zip')
 print(train_dataset)
 ```
 
- 
-
 （2）从 csv 文件读取
 
- 
-
 ```python
-csv_file = ag.utils.download('https://autogluon.s3-us-west-2.amazonaws.com/datasets/petfinder_example.csv')
+csv_file = autotimm.utils.download('https://autogluon.s3-us-west-2.amazonaws.com/datasets/petfinder_example.csv')
 image_data = TorchImageClassificationDataset.from_csv(csv_file)
 ```
 
@@ -63,12 +59,11 @@ data/
 
  
 
-# 2  模型训练
+## 2  模型训练
 
 使用 ImagePredictor() 自动进行模型训练和评估，下面是模型训练接口。
 
  
-
 ```python
 predictor = ImagePredictor()
 predictor.fit(train_dataset, hyperparameters={'epochs': 2}) 
@@ -138,7 +133,7 @@ Finished, total runtime is 22.83 s
 
  
 
-# 3  模型测试
+## 3  模型测试
 
 在完成模型训练之后，在测试集上对模型进行评估。在 fit 中，数据集会自动拆分为训练集和验证集。 根据其在验证集上的性能选择具有最佳超参数配置的模型。 最好的模型最终使用最佳配置在我们的整个数据集上重新训练（即合并训练+验证）。
 
@@ -153,7 +148,7 @@ print('Top-1 test acc: %.3f' % test_acc['top1'])
 Top-1 test acc: 0.688
 ```
 
-## 3.1 单张图片预测
+### 3.1 单张图片预测
 
 给出一个示例图像，我们可以很容易地使用最终模型预测标签：
 
@@ -174,7 +169,7 @@ print(proba)
 0  0.230975  0.350888  0.260955  0.157182
 ```
 
-## 3.2 批量预测
+### 3.2 批量预测
 
 还可以同时输入多个图像，得到预测结果的列表：
 
@@ -195,7 +190,7 @@ print(bulk_result)
 Name: label, Length: 80, dtype: int64
 ```
 
-## 3.3 提取图像特征
+### 3.3 提取图像特征
 
 从模型学习提取整个图像表示，我们提供predict_特征函数，允许predictor返回N维图像特征，其中N取决于模型（通常为512到2048长度向量）
 
@@ -207,7 +202,7 @@ print(feature)
 
 image_feature 0 [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...
 
-# 4  保存和加载模型
+## 4  保存和加载模型
 
 模型训练完成可以很方便的将模型保存下来方便后续使用：
 
@@ -221,5 +216,3 @@ print(result)
 0    1
 Name: label, dtype: int64
 ```
-
- 
