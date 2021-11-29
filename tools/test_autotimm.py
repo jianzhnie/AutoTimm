@@ -1,12 +1,16 @@
 '''
 Author: jianzhnie
 Date: 2021-08-09 15:54:25
-LastEditTime: 2021-11-29 15:32:28
+LastEditTime: 2021-11-29 16:56:02
 LastEditors: jianzhnie
 Description:
 
 '''
 import autogluon.core as ag
+
+import sys
+
+sys.path.append("../")
 
 from autotimm.auto import ImagePredictor
 

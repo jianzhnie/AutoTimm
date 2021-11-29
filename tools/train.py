@@ -13,6 +13,9 @@ import torch.distributed as dist
 import torch.nn as nn
 import torch.utils.data
 import torch.utils.data.distributed
+import sys
+
+sys.path.append("../")
 
 from autotimm.data.dataloaders import get_pytorch_train_loader, get_pytorch_val_loader
 from autotimm.data.mixup import MixUpWrapper, NLLMultiLabelSmooth

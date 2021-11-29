@@ -2,6 +2,9 @@ import os
 import time
 import argparse
 import logging
+import sys
+sys.path.append("../")
+sys.path.append("../autotimm")
 from configuration import gluon_config_choice
 from autotimm.utils.utils import find_best_model, parse_config, write_csv_file, find_best_model_loop, update_kwargs
 from autotimm.proxydata.search_proxy_data import ProxyModel
@@ -133,7 +136,7 @@ def main():
                 opt.data_path[:-6])
             proxmodel = ProxyModel()
             proxmodel.fit(train_data, val_data)
-            saved_path = os.path.join(opt.out_dir, opt.dataset)
+            saved_path = os.path.join(opt.output_path, opt.dataset)
             proxy_data = proxmodel.generate_proxy_data(train_data=train_data,
                                                        output_dir=saved_path)
             csv_path = os.path.join(saved_path, "proxy_data.csv")
@@ -165,8 +168,7 @@ def main():
                           hyperparameters=target_hyperparams,
                           hyperparameter_tune_kwargs=tune_hyperparameter,
                           ngpus_per_trial=ngpus_per_trial,
-                          time_limit=config['time_limit'],
-                          verbosity=2)
+                          time_limit=config['time_limit'])
 
             summary = predictor.fit_summary()
             logger.info('Top-1 val acc: %.3f' % summary['valid_acc'])
@@ -185,8 +187,7 @@ def main():
                               hyperparameters=target_hyperparams,
                               hyperparameter_tune_kwargs=tune_hyperparameter,
                               ngpus_per_trial=ngpus_per_trial,
-                              time_limit=config['time_limit'],
-                              verbosity=2)
+                              time_limit=config['time_limit'])
 
             # use the default saved model to evaluate
             val_acc, _ = predictor.evaluate(val_dataset)
@@ -391,8 +392,7 @@ def main():
                           hyperparameters=target_hyperparams,
                           hyperparameter_tune_kwargs=tune_hyperparameter,
                           ngpus_per_trial=ngpus_per_trial,
-                          time_limit=config['time_limit'],
-                          verbosity=2)
+                          time_limit=config['time_limit'])
 
             summary = predictor.fit_summary()
             logging.info('Top-1 val acc: %.3f' % summary['valid_acc'])

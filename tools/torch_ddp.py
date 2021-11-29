@@ -17,11 +17,11 @@ import torch.utils.data.distributed
 import torchvision.utils
 from torchvision import datasets, models, transforms
 import autogluon.core as ag
-from autotorch.utils.model import save_checkpoint, reduce_tensor, adjust_learning_rate, load_checkpoint
-from autotorch.utils.metrics import AverageMeter, accuracy
-from autotorch.models.model_zoo import get_model_list
-from autotorch.models.network import get_input_size, init_network
-from autotorch.data.dataloaders import get_pytorch_train_loader, get_pytorch_val_loader
+from autotimm.utils.model import save_checkpoint, reduce_tensor, adjust_learning_rate, load_checkpoint
+from autotimm.utils.metrics import AverageMeter, accuracy
+from autotimm.models.model_zoo import get_model_list
+from autotimm.models.network import get_input_size, init_network
+from autotimm.data.dataloaders import get_pytorch_train_loader, get_pytorch_val_loader
 
 
 model_names = get_model_list()

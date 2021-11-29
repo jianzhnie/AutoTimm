@@ -1,3 +1,11 @@
+'''
+Author: jianzhnie
+Date: 2021-09-30 15:23:37
+LastEditTime: 2021-11-29 16:59:02
+LastEditors: jianzhnie
+Description: 
+
+'''
 import os
 import sys
 
@@ -7,7 +15,7 @@ if __name__ == '__main__':
 
     if sys.version_info < (3, 7):
         raise ValueError(
-            'Unsupported Python version %d.%d.%d found. Auto-tabular requires Python '
+            'Unsupported Python version %d.%d.%d found. Auto-Timm requires Python '
             '3.7 or higher.' % (sys.version_info.major, sys.version_info.minor,
                                 sys.version_info.micro))
 
@@ -18,17 +26,17 @@ if __name__ == '__main__':
             if not r.startswith('#') and not r.startswith('git+')
         ]
 
-    with open('autotabular/__version__.py') as fh:
+    with open('autotimm/__version__.py') as fh:
         version = fh.readlines()[-1].split()[-1].strip("\"'")
 
     with open('README.md', encoding='utf-8') as fh:
         long_description = fh.read()
 
     setup(
-        name='autotabular',
+        name='autotimm',
         author='Jianzh Nie',
         author_email='jianzhnie@gmail.com',
-        description='Automatic machine learning for tabular data.',
+        description='Automatic machine learning for Timm data.',
         long_description=long_description,
         long_description_content_type='text/markdown',
         version=version,
@@ -54,8 +62,8 @@ if __name__ == '__main__':
         ],
         keywords=[
             'automated machine learning', 'automl', 'machine learning',
-            'data science', 'data mining', 'autotabular'
+            'data science', 'data mining', 'autotimm'
         ],
         python_requires='>=3.7',
-        url='https://github.com/jianzhnie/AutoTabular',
+        url='https://github.com/jianzhnie/AutoTimm',
     )

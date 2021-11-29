@@ -5,13 +5,13 @@ import logging
 import torch.nn as nn
 import torch.nn.functional as F
 from torch import optim
-from autotorch.models.network import init_network, get_input_size
-from autotorch.auto.data.dataloader import get_pytorch_train_loader, get_pytorch_val_loader
-from autotorch.utils.metrics import AverageMeter, accuracy, ProgressMeter
-from autotorch.utils.model import reduce_tensor
-from autotorch.auto.estimators.base_estimator import set_default
-from autotorch.proxydata.default import ImageClassificationCfg
-from autotorch.proxydata.sampler import read_entropy_file, get_proxy_data_random, get_proxy_data_log_entropy_histogram
+from autotimm.models.network import init_network, get_input_size
+from autotimm.auto.data.dataloader import get_pytorch_train_loader, get_pytorch_val_loader
+from autotimm.utils.metrics import AverageMeter, accuracy, ProgressMeter
+from autotimm.utils.model import reduce_tensor
+from autotimm.auto.estimators.base_estimator import set_default
+from autotimm.proxydata.default import ImageClassificationCfg
+from autotimm.proxydata.sampler import read_entropy_file, get_proxy_data_random, get_proxy_data_log_entropy_histogram
 
 
 @set_default(ImageClassificationCfg())
@@ -236,7 +236,7 @@ class ProxyModel():
 
 
 if __name__ == '__main__':
-    from autotorch.auto import ImagePredictor
+    from autotimm.auto import ImagePredictor
     train_dataset, val_dataset, test_dataset = ImagePredictor.Dataset.from_folders(
         '/data/AutoML_compete/food-101/split/')
 
