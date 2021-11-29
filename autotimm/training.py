@@ -1,12 +1,179 @@
 import time
 
 import torch
+import torch.nn as nn
 from torch.autograd import Variable
 from torch.cuda.amp import autocast
+from copy import deepcopy
+from typing import Callable, Dict, Optional, Tuple
+from torch.cuda.amp import autocast
+from torch.nn.parallel import DistributedDataParallel as DDP
 
 from autotimm.utils.metrics import AverageMeter, accuracy
 from autotimm.utils.model import reduce_tensor, save_checkpoint
 from autotimm.utils.time_handler import TimeoutHandler
+from autotimm.models.common import EMA
+
+class Executor:
+    def __init__(
+        self,
+        model: nn.Module,
+        loss: Optional[nn.Module],
+        cuda: bool = True,
+        memory_format: torch.memory_format = torch.contiguous_format,
+        amp: bool = False,
+        scaler: Optional[torch.cuda.amp.GradScaler] = None,
+        divide_loss: int = 1,
+        ts_script: bool = False,
+    ):
+        assert not (amp and scaler is None), "Gradient Scaler is needed for AMP"
+
+        def xform(m: nn.Module) -> nn.Module:
+            if cuda:
+                m = m.cuda()
+            m.to(memory_format=memory_format)
+            return m
+
+        self.model = xform(model)
+        if ts_script:
+            self.model = torch.jit.script(self.model)
+        self.ts_script = ts_script
+        self.loss = xform(loss) if loss is not None else None
+        self.amp = amp
+        self.scaler = scaler
+        self.is_distributed = False
+        self.divide_loss = divide_loss
+        self._fwd_bwd = None
+        self._forward = None
+
+    def distributed(self, gpu_id):
+        self.is_distributed = True
+        s = torch.cuda.Stream()
+        s.wait_stream(torch.cuda.current_stream())
+        with torch.cuda.stream(s):
+            self.model = DDP(self.model, device_ids=[gpu_id], output_device=gpu_id)
+        torch.cuda.current_stream().wait_stream(s)
+
+    def _fwd_bwd_fn(
+        self,
+        input: torch.Tensor,
+        target: torch.Tensor,
+    ) -> torch.Tensor:
+        with autocast(enabled=self.amp):
+            loss = self.loss(self.model(input), target)
+            loss /= self.divide_loss
+
+        self.scaler.scale(loss).backward()
+        return loss
+
+    def _forward_fn(
+        self, input: torch.Tensor, target: torch.Tensor
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        with torch.no_grad(), autocast(enabled=self.amp):
+            output = self.model(input)
+            loss = None if self.loss is None else self.loss(output, target)
+
+        return output if loss is None else loss, output
+
+    def optimize(self, fn):
+        return fn
+
+    @property
+    def forward_backward(self):
+        if self._fwd_bwd is None:
+            if self.loss is None:
+                raise NotImplementedError(
+                    "Loss must not be None for forward+backward step"
+                )
+            self._fwd_bwd = self.optimize(self._fwd_bwd_fn)
+        return self._fwd_bwd
+
+    @property
+    def forward(self):
+        if self._forward is None:
+            self._forward = self.optimize(self._forward_fn)
+        return self._forward
+
+    def train(self):
+        self.model.train()
+        if self.loss is not None:
+            self.loss.train()
+
+    def eval(self):
+        self.model.eval()
+        if self.loss is not None:
+            self.loss.eval()
+
+
+
+
+class Trainer:
+    def __init__(
+        self,
+        executor: Executor,
+        optimizer: torch.optim.Optimizer,
+        grad_acc_steps: int,
+        ema: Optional[float] = None,
+    ):
+        self.executor = executor
+        self.optimizer = optimizer
+        self.grad_acc_steps = grad_acc_steps
+        self.use_ema = False
+        if ema is not None:
+            self.ema_executor = deepcopy(self.executor)
+            self.ema = EMA(ema, self.ema_executor.model)
+            self.use_ema = True
+
+        self.optimizer.zero_grad(set_to_none=True)
+        self.steps_since_update = 0
+
+    def train(self):
+        self.executor.train()
+        if self.use_ema:
+            self.ema_executor.train()
+
+    def eval(self):
+        self.executor.eval()
+        if self.use_ema:
+            self.ema_executor.eval()
+
+    def train_step(self, input, target, step=None):
+        loss = self.executor.forward_backward(input, target)
+
+        self.steps_since_update += 1
+
+        if self.steps_since_update == self.grad_acc_steps:
+            if self.executor.scaler is not None:
+                self.executor.scaler.step(self.optimizer)
+                self.executor.scaler.update()
+            else:
+                self.optimizer.step()
+            self.optimizer.zero_grad()
+            self.steps_since_update = 0
+
+        torch.cuda.synchronize()
+
+        if self.use_ema:
+            self.ema(self.executor.model, step=step)
+
+        return loss
+
+    def validation_steps(self) -> Dict[str, Callable]:
+        vsd: Dict[str, Callable] = {"val": self.executor.forward}
+        if self.use_ema:
+            vsd["val_ema"] = self.ema_executor.forward
+        return vsd
+
+    def state_dict(self) -> dict:
+        res = {
+            "state_dict": self.executor.model.state_dict(),
+            "optimizer": self.optimizer.state_dict(),
+        }
+        if self.use_ema:
+            res["state_dict_ema"] = self.ema_executor.model.state_dict()
+
+        return res
+
 
 
 def get_train_step(model,
