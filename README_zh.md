@@ -2,9 +2,9 @@
 
 ## 1  数据集加载
 
-我们将使用图像分类任务来说明如何使用 AutoTimm API。 
+我们将使用图像分类任务来说明如何使用 AutoTimm API。
 
- 
+
 
 第一步导入需要的包和函数
 
@@ -13,7 +13,7 @@ import autotimm
 from from autotimm.auto import ImagePredictor, TorchImageClassificationDataset
 ```
 
- 
+
 
 第二步：导入数据集
 
@@ -33,7 +33,7 @@ csv_file = autotimm.utils.download('https://autogluon.s3-us-west-2.amazonaws.com
 image_data = TorchImageClassificationDataset.from_csv(csv_file)
 ```
 
- 
+
 
 下面是数据集列表
 
@@ -53,23 +53,23 @@ data/
 797  /var/lib/jenkins/.gluoncv/datasets/shopee-iet/...      3
 798  /var/lib/jenkins/.gluoncv/datasets/shopee-iet/...      3
 799  /var/lib/jenkins/.gluoncv/datasets/shopee-iet/...      3
- 
+
 [800 rows x 2 columns]
 ```
 
- 
+
 
 ## 2  模型训练
 
 使用 ImagePredictor() 自动进行模型训练和评估，下面是模型训练接口。
 
- 
+
 ```python
 predictor = ImagePredictor()
-predictor.fit(train_dataset, hyperparameters={'epochs': 2}) 
+predictor.fit(train_dataset, hyperparameters={'epochs': 2})
 ```
 
- 
+
 
 下面是模型训练的输出：
 
@@ -131,7 +131,7 @@ Finished, total runtime is 22.83 s
   'valid_acc': 0.75}
 ```
 
- 
+
 
 ## 3  模型测试
 
