@@ -3,8 +3,8 @@ import time
 import argparse
 import logging
 from configuration import gluon_config_choice
-from autotorch.utils.utils import find_best_model, parse_config, write_csv_file, find_best_model_loop, update_kwargs
-from autotorch.proxydata.search_proxy_data import ProxyModel
+from autotimm.utils.utils import find_best_model, parse_config, write_csv_file, find_best_model_loop, update_kwargs
+from autotimm.proxydata.search_proxy_data import ProxyModel
 
 
 def parse_args():
@@ -128,7 +128,7 @@ def main():
         test_dataset = ImagePredictor.Dataset.from_folder(test_data_dir)
 
         if opt.proxy:
-            from autotorch.auto.data import TorchImageClassificationDataset
+            from autotimm.auto.data import TorchImageClassificationDataset
             train_data, val_data, test_data = TorchImageClassificationDataset.from_folders(
                 opt.data_path[:-6])
             proxmodel = ProxyModel()
@@ -317,9 +317,9 @@ def main():
                         output_directory)
             predictor.save(os.path.join(output_directory, filename))
 
-    elif opt.train_framework == "autotorch":
+    elif opt.train_framework == "autotimm":
         import torch
-        from autotorch.auto import ImagePredictor
+        from autotimm.auto import ImagePredictor
         logger = logging.getLogger('')
         if not opt.checkpoint_path:
             out_dir = os.path.join(opt.output_path, opt.dataset,
@@ -354,7 +354,7 @@ def main():
         test_dataset = ImagePredictor.Dataset.from_folder(test_data_dir)
 
         if opt.proxy:
-            from autotorch.auto.data import TorchImageClassificationDataset
+            from autotimm.auto.data import TorchImageClassificationDataset
             train_data, val_data, test_data = TorchImageClassificationDataset.from_folders(
                 opt.data_path[:-6])
             proxmodel = ProxyModel()
@@ -412,58 +412,6 @@ def main():
             logger.info(
                 'Use the default saved model to evaluate on Test dataset')
             logging.info('Top-1 test acc: %.5f' % test_acc)
-
-    elif opt.train_framework == "bit":
-        from bit_task import train
-        train.bit_start(opt)
-
-    elif opt.train_framework == "autokeras":
-        import tensorflow as tf
-        import autokeras as ak
-        from keras_block import ResNet50V1, ResNet50V2
-
-        def keras_config_choice(dataset):
-
-            if dataset == "cifar10":
-                config = {
-                    "batch_size": 32,
-                    "img_height": 32,
-                    "img_width": 32,
-                }
-            else:
-                config = {
-                    "batch_size": 32,
-                    "img_height": 224,
-                    "img_width": 224,
-                    "model": ResNet50V1
-                }
-            return config
-
-        gpu = tf.config.experimental.list_physical_devices('GPU')
-        tf.config.experimental.set_memory_growth(gpu[0], True)
-
-        config = keras_config_choice(opt.dataset)
-        batch_size = config.get("batch_size", 32)
-        img_height = config.get("img_height", 224)
-        img_width = config.get("img_width", 224)
-
-        train_data_dir = opt.data_path
-        test_data_dir = train_data_dir.replace("train", "test")
-        train_data = ak.image_dataset_from_directory(
-            train_data_dir,
-            seed=123,
-            image_size=(img_height, img_width),
-            batch_size=batch_size,
-        )
-        input_node = ak.ImageInput()
-        output_node = ResNet50V2(pretrained=True, tunable=False)(input_node)
-        output_node = ak.ClassificationHead(tunable=False)(output_node)
-        clf = ak.AutoModel(inputs=input_node,
-                           outputs=output_node,
-                           max_trials=5)
-
-        clf.fit(train_data, batch_size=64, epochs=10)
-
 
 if __name__ == '__main__':
     main()
