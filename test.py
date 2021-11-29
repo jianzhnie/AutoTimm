@@ -16,7 +16,6 @@ from autotimm.data.mixup import NLLMultiLabelSmooth
 from autotimm.data.smoothing import LabelSmoothing
 from autotimm.models.model_zoo import get_model_list
 from autotimm.models.network import get_input_size, init_network
-from autotimm.training import validate
 from autotimm.utils.model import test_load_checkpoint
 
 
@@ -39,7 +38,8 @@ def parse_args():
         metavar='MODEL',
         default='resnet18',
         choices=model_names,
-        help='model architecture: ' + ' | '.join(model_names))
+        help='model architecture: ' + ' | '.join(model_names) +
+        ' (default: resnet18)')
     parser.add_argument(
         '-j',
         '--workers',

@@ -18,27 +18,6 @@ if __name__ == '__main__':
             if not r.startswith('#') and not r.startswith('git+')
         ]
 
-    extras_reqs = {
-        'test': [
-            'pytest>=4.6',
-            'mypy',
-            'pytest-xdist',
-            'pytest-timeout',
-            'flaky',
-            'openml',
-            'pre-commit',
-            'pytest-cov',
-        ],
-        'examples': [
-            'matplotlib',
-            'jupyter',
-            'notebook',
-            'seaborn',
-        ],
-        'docs':
-        ['sphinx', 'sphinx-gallery', 'sphinx_bootstrap_theme', 'numpydoc'],
-    }
-
     with open('autotabular/__version__.py') as fh:
         version = fh.readlines()[-1].split()[-1].strip("\"'")
 
@@ -55,7 +34,6 @@ if __name__ == '__main__':
         version=version,
         packages=find_packages(
             exclude=['test', 'scripts', 'examples', 'docs']),
-        extras_require=extras_reqs,
         install_requires=install_reqs,
         include_package_data=True,
         license='Apache License',

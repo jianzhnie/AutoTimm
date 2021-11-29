@@ -48,9 +48,6 @@ def get_sgd_optimizer(parameters,
         # print(" ! Weight decay NOT applied to BN parameters ")
         bn_params = [v for n, v in parameters if 'bn' in n]
         rest_params = [v for n, v in parameters if 'bn' not in n]
-        # print(len(bn_params))
-        # print(len(rest_params))
-
         params = [
             {
                 'params': bn_params,

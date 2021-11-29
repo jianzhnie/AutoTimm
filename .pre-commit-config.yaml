@@ -3,13 +3,6 @@ repos:
     rev: 3.8.3
     hooks:
       - id: flake8
-        args: [--max-line-length=160]
-      - id: flake8
-        name: flake8 autotimm
-        files: autotimm/
-      - id: flake8
-        name: flake8 tools
-        files: tools/
   - repo: https://github.com/asottile/seed-isort-config
     rev: v2.2.0
     hooks:
