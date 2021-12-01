@@ -1,10 +1,14 @@
+'''
+Author: jianzhnie
+Date: 2021-09-30 15:32:25
+LastEditTime: 2021-12-01 17:55:49
+LastEditors: jianzhnie
+Description:
+
+'''
 import timm
-import torchvision.models as models
 
 timm_models = timm.list_models(pretrained=True)
-torchvison_models = sorted(name for name in models.__dict__
-                           if name.islower() and not name.startswith('__')
-                           and callable(models.__dict__[name]))
 
 __all__ = ['get_model', 'get_model_list']
 
@@ -28,8 +32,6 @@ def get_model(name, **kwargs):
     name = name.lower()
     if name in timm_models:
         net = timm.create_model(name, **kwargs)
-    # elif name in torchvison_models:
-    #     net = models.__dict__[name](**kwargs)
     else:
         raise ValueError('%s\n\t%s' %
                          (str(name), '\n\t'.join(sorted(timm_models))))
@@ -47,7 +49,7 @@ def get_model_list():
 
 
 if __name__ == '__main__':
-    # models = get_model_list()
-    # print(models)
+    models = get_model_list()
+    print(models)
     net = get_model('efficientnet_b1', pretrained=False)
     print(net)
