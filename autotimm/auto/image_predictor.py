@@ -17,7 +17,6 @@ from autogluon.vision.configs.presets_configs import _check_gpu_memory_presets, 
 
 from autotimm.auto.task import ImageClassification
 from autotimm.auto.utils import sanitize_batch_size
-from autotimm.auto.utils.error_handler import TorchErrorCatcher
 from autotimm.models import get_model_list
 
 __all__ = ['ImagePredictor']
@@ -39,7 +38,7 @@ class ImagePredictor(object):
     eval_metric : str, default = None
         Metric by which to evaluate the data with. Options: ('accuracy').
         Currently only supports accuracy for multiclass classification.
-    path : str, default = None
+    log_dir : str, default = None
         The directory for saving logs or intermediate data. If unspecified, will create a sub-directory under
         current working directory.
     verbosity : int, default = 2

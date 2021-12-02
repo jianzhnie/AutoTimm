@@ -359,22 +359,16 @@ class ImageClassification(BaseTask):
         }
         if self.search_strategy == 'hyperband':
             self.scheduler_options.update({
-                'searcher':
-                'random',
-                'max_t':
-                config.get('epochs', 50),
-                'grace_period':
-                config.get('grace_period',
+                'searcher': 'random',
+                'max_t': config.get('epochs', 50),
+                'grace_period': config.get('grace_period',
                            config.get('epochs', 50) // 4)
             })
         elif self.search_strategy == 'bayesopt_hyperband':
             self.scheduler_options.update({
-                'searcher':
-                'bayesopt',
-                'max_t':
-                config.get('epochs', 50),
-                'grace_period':
-                config.get('grace_period',
+                'searcher': 'bayesopt',
+                'max_t': config.get('epochs', 50),
+                'grace_period': config.get('grace_period',
                            config.get('epochs', 50) // 4)
             })
 
@@ -427,7 +421,7 @@ class ImageClassification(BaseTask):
         if not isinstance(train_data, pd.DataFrame):
             assert val_data is not None, \
                 'Please provide `val_data` as we do not know how to split `train_data` of type: \
-                {}'                   .format(type(train_data))
+                {}'.format(type(train_data))
 
         if val_data is None:
             assert 0 <= train_size <= 1.0
@@ -488,15 +482,11 @@ class ImageClassification(BaseTask):
             best_config.pop('train_data', None)
             best_config.pop('val_data', None)
             self._fit_summary.update({
-                'train_acc':
-                results.get('train_acc', -1),
-                'valid_acc':
-                results.get('valid_acc', -1),
-                'total_time':
-                results.get('time',
+                'train_acc': results.get('train_acc', -1),
+                'valid_acc': results.get('valid_acc', -1),
+                'total_time': results.get('time',
                             time.time() - start_time),
-                'best_config':
-                best_config
+                'best_config': best_config
             })
             self._results = self._fit_summary
         else:

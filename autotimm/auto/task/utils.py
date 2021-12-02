@@ -1,5 +1,4 @@
 """Utils for auto tasks."""
-import copy
 import warnings
 
 import autogluon.core as ag
