@@ -175,3 +175,52 @@ tricks = ag.space.Dict(
             batch_norm=False,
             use_gn=False)
 ```
+## Experiment Result
+We test our framwork on 41 open source datasets and compared with ModelArts、EasyDL、AutoGluon and BiT. Our framwork shows the best performance on more than 80% datasets. Hyperparameter  tuning was used on AutoGluon、BiT and AutoTimm. The model、learning-rate and betchsize be chosen in the same framework might be different. Here are specific accuracy on each test dataset of 41 datasets.
+
+ 
+
+|                   dataset                   | ModelArts |  EasyDL   |    BiT    | AutoGluon | AutoTimm  |
+| :-----------------------------------------: | :-------: | :-------: | :-------: | :-------: | :-------: |
+|                 dog-vs-cat                  |   0.99    |   0.994   |   0.995   |   0.996   | **0.997** |
+|                  sport-70                   |   0.934   |   0.967   |   0.961   |   0.976   | **0.988** |
+|                Chinese MNIST                |   0.994   | **0.999** |   0.998   |   0.998   |   0.997   |
+|               casting product               |   0.762   | **0.997** |   0.991   |   0.995   |   0.996   |
+|         A-Large-Scale-Fish-Dataset          |   0.953   |   0.988   |     1     |     1     |   **1**   |
+|             Flowers Recognition             |   0.943   |   0.956   |   0.964   |   0.947   | **0.968** |
+|              Emotion Detection              |   0.605   |   0.706   |   0.671   |   0.705   | **0.721** |
+|          Dog Breed Identification           |   0.758   |   0.76    |   0.808   |   0.924   | **0.958** |
+|             Leaf Classification             |   0.662   |   0.611   | **0.95**  |   0.848   |   0.919   |
+|       APTOS 2019 Blindness Detection        |   0.789   |   0.836   | **0.852** |   0.829   |   0.85    |
+|            Cassava Leaf Disease             |   0.828   |   0.843   |   0.86    |   0.866   | **0.887** |
+| The Nature Conservancy Fisheries Monitoring |   0.945   |   0.947   |   0.965   |   0.951   | **0.965** |
+|       Plant Seedlings Classification        |   0.909   | **0.991** |   0.965   |   0.964   |   0.974   |
+|              Oxford Flower-102              |   0.977   |   0.985   |   0.982   |   0.993   | **0.996** |
+|         National Data Science Bowl          |   0.523   |   0.747   |   0.76    |   0.745   | **0.782** |
+|                  Food-101                   |   0.828   |     /     |   0.859   |   0.889   | **0.928** |
+|         Caltech-UCSD Birds-200-2011         |   0.674   |   0.802   |   0.844   |   0.857   |  **0.9**  |
+|                  CINIC-10                   |   0.386   |     /     |   0.934   |   0.923   | **0.965** |
+|                 Caltech-101                 |   0.883   |   0.933   | **0.968** |   0.958   |   0.963   |
+|                     DTD                     |   0.661   |   0.668   |   0.753   |   0.715   | **0.781** |
+|                FGVC-Aircraft                |   0.857   |   0.827   |   0.942   |   0.964   | **0.969** |
+|             Weather-recognition             |   0.83    |   0.836   |   0.866   |   0.838   |   0.867   |
+|           Store-type-recognition            |   0.624   |   0.702   |   0.697   |   0.686   | **0.729** |
+|                    MURA                     |   0.786   |   0.817   |   0.808   |   0.833   | **0.834** |
+|                   CIFAR10                   |   0.637   |   0.971   |   0.968   |   0.976   | **0.991** |
+|                  CIFAR100                   |   0.142   |   0.844   |   0.83    |   0.848   | **0.928** |
+|                UKCarsDataset                |   0.672   |   0.864   |   0.681   |   0.831   | **0.898** |
+|           garbage classification            |   0.972   |   0.979   |   0.977   |   0.974   | **0.983** |
+|                flying plane                 |   0.689   |   0.729   |   0.766   |   0.75    | **0.785** |
+|                  Satellite                  |   0.986   |   0.996   |   0.997   |   0.993   | **0.998** |
+|                    MAMe                     |   0.814   |   0.869   |   0.836   |   0.863   | **0.879** |
+|                 Road damage                 |   0.966   |   0.973   |   0.969   |   0.969   | **0.978** |
+|           Boat types recognition            |   0.875   |   0.92    |   0.92    |   0.944   | **0.958** |
+|            Scene Classification             |   0.921   |   0.944   |   0.95    |   0.937   | **0.957** |
+|                    coins                    |   0.725   |   0.83    |   0.901   |   0.909   | **0.919** |
+|             Bald Classification             |   0.989   |     /     |   0.989   |   0.99    | **0.99**  |
+|              Vietnamese Foods               |   0.854   |   0.913   |   0.891   |   0.923   | **0.936** |
+|                  Yoga Pose                  |   0.53    |   0.673   | **0.75**  |   0.667   |   0.73    |
+|                Green Finder                 |   0.989   |   0.994   |   0.999   |   0.998   | **0.999** |
+|              MIT Indoor Scene               |   0.764   |   0.82    |   0.846   |   0.852   | **0.889** |
+|        Google Scraped Image Dataset         |   0.835   |   0.788   |   0.802   | **0.926** |   0.918   |
+
